@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sebastian - English Practice & Scheduler</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        body {
+            background-color: #020813;
+            color: #00ffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            position: relative;
+        }
+        /* Estilo do Reator Holográfico */
+        .sebastian-reactor {
+            width: 300px;
+            height: 300px;
+            border: 3px dashed rgba(0, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 0 auto 30px auto;
+            animation: spinSlow 10s linear infinite;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+        }
+        .sebastian-inner {
+            width: 220px;
+            height: 220px;
+            border: 4px solid #00ffff;
+            border-radius: 50%;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: spinReverse 6s linear infinite;
+        }
+        .sebastian-core {
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, rgba(0,255,255,0.4) 0%, rgba(2,8,19,1) 80%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 22px;
+            letter-spacing: 2px;
+            box-shadow: inset 0 0 20px #00ffff;
+            transition: all 0.3s ease;
+        }
+        /* Animação quando estiver ouvindo */
+        .listening .sebastian-reactor {
+            border-color: #ff0055;
+            box-shadow: 0 0 50px rgba(255, 0, 85, 0.5);
+            animation: spinSlow 3s linear infinite;
+        }
+        .listening .sebastian-core {
+            background: radial-gradient(circle, rgba(255,0,85,0.5) 0%, rgba(2,8,19,1) 80%);
+            box-shadow: inset 0 0 30px #ff0055;
+            color: #ff0055;
+        }
+        @keyframes spinSlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes spinReverse {
+            0% { transform: rotate(360deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .status-box {
+            margin-top: 15px;
+        }
+        .status-text {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .status-translation {
+            font-size: 13px;
+            color: #88ccff;
+            margin-top: 4px;
+        }
+        .transcript-container {
+            margin-top: 25px;
+            max-width: 500px;
+            min-height: 50px;
+        }
+        .transcript-en {
+            font-size: 15px;
+            color: #ffffff;
+        }
+        .transcript-pt {
+            font-size: 13px;
+            color: #00aaaa;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="sebastianContainer">
+        <div class="sebastian-reactor" id="reactorBtn" title="Clique para falar com o Sebastian">
+            <div class="sebastian-inner">
+                <div class="sebastian-core">SEBASTIAN</div>
+            </div>
+        </div>
+        
+        <div class="status-box">
+            <div class="status-text" id="statusText">Click the core to speak with Sebastian</div>
+            <div class="status-translation" id="statusTranslation">Clique no núcleo para falar com o Sebastian</div>
+        </div>
+
+        <div class="transcript-container">
+            <div class="transcript-en" id="transcriptEn"></div>
+            <div class="transcript-pt" id="transcriptPt"></div>
+        </div>
+    </div>
+
+    <script>
+        const reactorBtn = document.getElementById('reactorBtn');
+        const container = document.getElementById('sebastianContainer');
+        const statusText = document.getElementById('statusText');
+        const statusTranslation = document.getElementById('statusTranslation');
+        const transcriptEn = document.getElementById('transcriptEn');
+        const transcriptPt = document.getElementById('transcriptPt');
+
+        // Função para falar em inglês
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 1.0;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+
+            reactorBtn.addEventListener('click', () => {
+                recognition.start();
+            });
+
+            recognition.onstart = () => {
+                container.classList.add('listening');
+                statusText.innerText = "Listening...";
+                statusTranslation.innerText = "Ouvindo...";
+                transcriptEn.innerText = "";
+                transcriptPt.innerText = "";
+            };
+
+            recognition.onresult = async (event) => {
+                const speechResult = event.results[0][0].transcript;
+                
+                // Exibe o que o usuário falou com a tradução logo abaixo
+                transcriptEn.innerText = `You: "${speechResult}"`;
+                transcriptPt.innerText = `Você: "${speechResult}"`;
+                
+                let replyEn = "Hello! How can I assist you with your English practice today?";
+                let replyPt = "Olá! Como posso ajudar você com sua prática de inglês hoje?";
+
+                // Se a frase contiver "book", chama a API do Spring Boot
+                if (speechResult.toLowerCase().includes('book')) {
+                    statusText.innerText = "Booking class with backend...";
+                    statusTranslation.innerText = "Agendando aula com o backend...";
+
+                    const bookingData = {
+                        dateTime: "2026-10-05T14:00:00",
+                        studentName: "Estevam"
+                    };
+
+                    try {
+                        const response = await fetch('http://localhost:8080/api/schedule/book', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(bookingData)
+                        });
+
+                        if (response.ok) {
+                            replyEn = "Class successfully booked for you, sir!";
+                            replyPt = "Aula agendada com sucesso para você!";
+                        } else {
+                            const errorMsg = await response.text();
+                            replyEn = "Sorry, that time slot is already booked.";
+                            replyPt = "Desculpe, esse horário já está reservado.";
+                        }
+                    } catch (error) {
+                        replyEn = "Backend connection error.";
+                        replyPt = "Erro de conexão com o backend.";
+                    }
+                }
+                
+                statusText.innerText = "Sebastian Speaking...";
+                statusTranslation.innerText = "Sebastian Falando...";
+                
+                speak(replyEn);
+                
+                // Atualiza a tela com a resposta do Sebastian e a tradução
+                setTimeout(() => {
+                    transcriptEn.innerText = `Sebastian: "${replyEn}"`;
+                    transcriptPt.innerText = `Sebastian: "${replyPt}"`;
+                }, 500);
+
+                setTimeout(() => {
+                    statusText.innerText = "Click the core to speak with Sebastian";
+                    statusTranslation.innerText = "Clique no núcleo para falar com o Sebastian";
+                    container.classList.remove('listening');
+                }, 4000);
+            };
+
+            recognition.onerror = () => {
+                statusText.innerText = "Error occurred. Try again.";
+                statusTranslation.innerText = "Ocorreu um erro. Tente novamente.";
+                container.classList.remove('listening');
+            };
+
+        } else {
+            statusText.innerText = "Speech recognition not supported in this browser. Use Google Chrome.";
+            statusTranslation.innerText = "Reconhecimento de voz não suportado neste navegador. Use o Google Chrome.";
+        }
+    </script>
+</body>
+</html>
