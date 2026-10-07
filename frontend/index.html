@@ -12,120 +12,224 @@
             font-family: 'Courier New', Courier, monospace;
         }
         body {
-            background-color: #020813;
+            background-color: #010409;
             color: #00ffff;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow-y: auto;
+            padding: 20px;
         }
         .container {
             text-align: center;
             position: relative;
+            max-width: 600px;
+            width: 100%;
         }
-        /* Estilo do Reator Holográfico */
-        .sebastian-reactor {
-            width: 300px;
-            height: 300px;
-            border: 3px dashed rgba(0, 255, 255, 0.3);
+
+        /* --- ROSTO HOLOGRÁFICO PREMIUM DO SEBASTIAN --- */
+        .sebastian-face-container {
+            width: 260px;
+            height: 260px;
+            border: 2px solid rgba(0, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            margin: 0 auto 30px auto;
-            animation: spinSlow 10s linear infinite;
+            margin: 0 auto 25px auto;
+            animation: containerPulse 6s ease-in-out infinite;
             cursor: pointer;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.15), inset 0 0 30px rgba(0, 255, 255, 0.1);
+            background: radial-gradient(circle, rgba(0,255,255,0.08) 0%, rgba(1,4,9,0.95) 85%);
         }
-        .sebastian-inner {
-            width: 220px;
-            height: 220px;
-            border: 4px solid #00ffff;
+
+        /* Anel orbital externo tecnológico */
+        .sebastian-face-container::before {
+            content: '';
+            position: absolute;
+            width: 290px;
+            height: 290px;
+            border: 1px dashed rgba(0, 255, 255, 0.3);
             border-radius: 50%;
-            border-top: 4px solid transparent;
-            border-bottom: 4px solid transparent;
+            animation: spinSlow 15s linear infinite;
+        }
+
+        /* Silhueta / Contorno Facial Estilizado */
+        .head-outline {
+            width: 170px;
+            height: 200px;
+            border: 2px solid rgba(0, 255, 255, 0.7);
+            border-radius: 50% 50% 45% 45%;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            animation: spinReverse 6s linear infinite;
+            padding: 25px 0;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), inset 0 0 15px rgba(0, 255, 255, 0.2);
+            background: rgba(0, 255, 255, 0.02);
+            animation: floatFace 4s ease-in-out infinite;
         }
-        .sebastian-core {
-            width: 140px;
-            height: 140px;
-            background: radial-gradient(circle, rgba(0,255,255,0.4) 0%, rgba(2,8,19,1) 80%);
-            border-radius: 50%;
+
+        /* Olhos Cibernéticos Elegantes */
+        .eyes-row {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 22px;
-            letter-spacing: 2px;
-            box-shadow: inset 0 0 20px #00ffff;
+            justify-content: space-between;
+            width: 90px;
+            margin-bottom: 20px;
+        }
+        .eye {
+            width: 24px;
+            height: 10px;
+            background: #00ffff;
+            border-radius: 5px;
+            box-shadow: 0 0 12px #00ffff;
             transition: all 0.3s ease;
         }
-        /* Animação quando estiver ouvindo */
-        .listening .sebastian-reactor {
+
+        /* Linha Central / Nariz Minimalista */
+        .cyber-nose {
+            width: 2px;
+            height: 25px;
+            background: rgba(0, 255, 255, 0.5);
+            box-shadow: 0 0 6px #00ffff;
+            margin-bottom: 25px;
+        }
+
+        /* Boca / Onda de Áudio Estilizada */
+        .sebastian-mouth {
+            width: 50px;
+            height: 6px;
+            background: #00ffff;
+            border-radius: 3px;
+            box-shadow: 0 0 12px #00ffff;
+            transition: all 0.2s ease;
+        }
+
+        /* Estados de Animação: Ouvindo (Vermelho Holográfico) */
+        .listening .sebastian-face-container {
+            border-color: rgba(255, 0, 85, 0.4);
+            box-shadow: 0 0 50px rgba(255, 0, 85, 0.3), inset 0 0 30px rgba(255, 0, 85, 0.2);
+            background: radial-gradient(circle, rgba(255,0,85,0.12) 0%, rgba(1,4,9,0.95) 85%);
+        }
+        .listening .sebastian-face-container::before {
+            border-color: rgba(255, 0, 85, 0.4);
+        }
+        .listening .head-outline {
             border-color: #ff0055;
-            box-shadow: 0 0 50px rgba(255, 0, 85, 0.5);
-            animation: spinSlow 3s linear infinite;
+            box-shadow: 0 0 25px rgba(255, 0, 85, 0.5), inset 0 0 20px rgba(255, 0, 85, 0.3);
         }
-        .listening .sebastian-core {
-            background: radial-gradient(circle, rgba(255,0,85,0.5) 0%, rgba(2,8,19,1) 80%);
-            box-shadow: inset 0 0 30px #ff0055;
-            color: #ff0055;
+        .listening .eye, .listening .cyber-nose, .listening .sebastian-mouth {
+            background: #ff0055;
+            box-shadow: 0 0 15px #ff0055;
         }
+        .listening .sebastian-mouth {
+            animation: talkPulse 0.4s infinite alternate;
+        }
+
+        /* Estados de Animação: Falando (Verde Ciano Brilhante) */
+        .speaking .sebastian-mouth {
+            background: #00ffcc;
+            box-shadow: 0 0 20px #00ffcc;
+            animation: talkPulse 0.25s infinite alternate;
+        }
+
         @keyframes spinSlow {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        @keyframes spinReverse {
-            0% { transform: rotate(360deg); }
-            100% { transform: rotate(0deg); }
+
+        @keyframes containerPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
         }
+
+        @keyframes floatFace {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        @keyframes talkPulse {
+            0% { transform: scaleX(0.8); height: 6px; }
+            100% { transform: scaleX(1.4); height: 14px; }
+        }
+
         .status-box {
             margin-top: 15px;
         }
         .status-text {
-            font-size: 16px;
+            font-size: 15px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         .status-translation {
-            font-size: 13px;
+            font-size: 12px;
             color: #88ccff;
-            margin-top: 4px;
+            margin-top: 3px;
+        }
+        .slots-container {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .slot-btn {
+            background: rgba(0, 255, 255, 0.08);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            color: #00ffff;
+            padding: 8px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+        .slot-btn:hover {
+            background: rgba(0, 255, 255, 0.25);
+            box-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
         }
         .transcript-container {
-            margin-top: 25px;
-            max-width: 500px;
+            margin-top: 20px;
             min-height: 50px;
         }
         .transcript-en {
-            font-size: 15px;
+            font-size: 14px;
             color: #ffffff;
         }
         .transcript-pt {
-            font-size: 13px;
+            font-size: 12px;
             color: #00aaaa;
-            margin-top: 4px;
+            margin-top: 3px;
         }
     </style>
 </head>
 <body>
 
     <div class="container" id="sebastianContainer">
-        <div class="sebastian-reactor" id="reactorBtn" title="Clique para falar com o Sebastian">
-            <div class="sebastian-inner">
-                <div class="sebastian-core">SEBASTIAN</div>
+        <!-- Rosto Holográfico Refinado -->
+        <div class="sebastian-face-container" id="reactorBtn" title="Clique para conversar com o Sebastian">
+            <div class="head-outline">
+                <div class="eyes-row">
+                    <div class="eye"></div>
+                    <div class="eye"></div>
+                </div>
+                <div class="cyber-nose"></div>
+                <div class="sebastian-mouth" id="sebastianMouth"></div>
             </div>
         </div>
         
         <div class="status-box">
-            <div class="status-text" id="statusText">Click the core to speak with Sebastian</div>
-            <div class="status-translation" id="statusTranslation">Clique no núcleo para falar com o Sebastian</div>
+            <div class="status-text" id="statusText">Click the face to practice conversation</div>
+            <div class="status-translation" id="statusTranslation">Clique no rosto para praticar conversação</div>
+        </div>
+
+        <div class="slots-container" id="slotsContainer">
+            <button class="slot-btn" onclick="bookSlot('2026-10-15T14:00:00', '15/10 às 14:00')">Book: 15/10 - 14:00</button>
+            <button class="slot-btn" onclick="bookSlot('2026-10-15T15:00:00', '15/10 às 15:00')">Book: 15/10 - 15:00</button>
         </div>
 
         <div class="transcript-container">
@@ -142,12 +246,74 @@
         const transcriptEn = document.getElementById('transcriptEn');
         const transcriptPt = document.getElementById('transcriptPt');
 
-        // Função para falar em inglês
+        const personalQuestions = [
+            { en: "What is your name?", pt: "Qual é o seu nome?" },
+            { en: "How old are you?", pt: "Quantos anos você tem?" },
+            { en: "Where do you live?", pt: "Onde você mora?" },
+            { en: "Where are you from?", pt: "De onde você é?" },
+            { en: "What do you do for a living?", pt: "O que você faz da vida / Qual é a sua profissão?" },
+            { en: "Are you working or studying right now?", pt: "Você está trabalhando ou estudando no momento?" },
+            { en: "Do you have any brothers or sisters?", pt: "Você tem irmãos ou irmãs?" },
+            { en: "Are you married or single?", pt: "Você é casado(a) ou solteiro(a)?" },
+            { en: "What do you like to do in your free time?", pt: "O que você gosta de fazer no seu tempo livre?" },
+            { en: "What is your favorite kind of music?", pt: "Qual é o seu tipo favorito de música?" },
+            { en: "Do you have any pets?", pt: "Você tem algum animal de estimação?" },
+            { en: "What is your favorite food?", pt: "Qual é a sua comida favorita?" },
+            { en: "Can you speak any other languages?", pt: "Você sabe falar outros idiomas?" },
+            { en: "What time do you usually wake up?", pt: "Que horas você costuma acordar?" },
+            { en: "How do you usually get to work or school?", pt: "Como você costuma ir para o trabalho ou escola?" },
+            { en: "What is your favorite color?", pt: "Qual é a sua cor favorita?" },
+            { en: "Do you prefer the morning or the night?", pt: "Você prefere a manhã ou a noite?" },
+            { en: "What is your dream job?", pt: "Qual é o emprego dos seus sonhos?" },
+            { en: "Where would you like to travel in the future?", pt: "Para onde você gostaria de viajar no futuro?" },
+            { en: "How are you feeling today?", pt: "Como você está se sentindo hoje?" }
+        ];
+
         function speak(text) {
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'en-US';
             utterance.rate = 1.0;
+
+            utterance.onstart = () => {
+                container.classList.add('speaking');
+            };
+            utterance.onend = () => {
+                container.classList.remove('speaking');
+            };
+
             window.speechSynthesis.speak(utterance);
+        }
+
+        async function bookSlot(dateTimeIso, displayTime) {
+            statusText.innerText = `Booking slot for ${displayTime}...`;
+            statusTranslation.innerText = `Agendando horário para ${displayTime}...`;
+
+            const bookingData = { dateTime: dateTimeIso, studentName: "Estevam" };
+
+            try {
+                const response = await fetch('http://localhost:8080/api/schedule/book', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bookingData)
+                });
+
+                if (response.ok) {
+                    const replyEn = `Class successfully booked for ${displayTime}, sir!`;
+                    const replyPt = `Aula agendada com sucesso para ${displayTime}!`;
+                    transcriptEn.innerText = `Sebastian: "${replyEn}"`;
+                    transcriptPt.innerText = `Sebastian: "${replyPt}"`;
+                    speak(replyEn);
+                } else {
+                    const replyEn = "Sorry, that time slot is already booked.";
+                    const replyPt = "Desculpe, esse horário já está reservado.";
+                    transcriptEn.innerText = `Sebastian: "${replyEn}"`;
+                    transcriptPt.innerText = `Sebastian: "${replyPt}"`;
+                    speak(replyEn);
+                }
+            } catch (error) {
+                transcriptEn.innerText = `Sebastian: "Backend connection error."`;
+                transcriptPt.innerText = `Sebastian: "Erro de conexão com o backend."`;
+            }
         }
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -163,8 +329,8 @@
 
             recognition.onstart = () => {
                 container.classList.add('listening');
-                statusText.innerText = "Listening...";
-                statusTranslation.innerText = "Ouvindo...";
+                statusText.innerText = "Listening to your conversation...";
+                statusTranslation.innerText = "Ouvindo sua conversação...";
                 transcriptEn.innerText = "";
                 transcriptPt.innerText = "";
             };
@@ -172,62 +338,36 @@
             recognition.onresult = async (event) => {
                 const speechResult = event.results[0][0].transcript;
                 
-                // Exibe o que o usuário falou com a tradução logo abaixo
                 transcriptEn.innerText = `You: "${speechResult}"`;
                 transcriptPt.innerText = `Você: "${speechResult}"`;
                 
-                let replyEn = "Hello! How can I assist you with your English practice today?";
-                let replyPt = "Olá! Como posso ajudar você com sua prática de inglês hoje?";
+                let replyEn = "";
+                let replyPt = "";
 
-                // Se a frase contiver "book", chama a API do Spring Boot
                 if (speechResult.toLowerCase().includes('book')) {
-                    statusText.innerText = "Booking class with backend...";
-                    statusTranslation.innerText = "Agendando aula com o backend...";
-
-                    const bookingData = {
-                        dateTime: "2026-10-05T14:00:00",
-                        studentName: "Estevam"
-                    };
-
-                    try {
-                        const response = await fetch('http://localhost:8080/api/schedule/book', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(bookingData)
-                        });
-
-                        if (response.ok) {
-                            replyEn = "Class successfully booked for you, sir!";
-                            replyPt = "Aula agendada com sucesso para você!";
-                        } else {
-                            const errorMsg = await response.text();
-                            replyEn = "Sorry, that time slot is already booked.";
-                            replyPt = "Desculpe, esse horário já está reservado.";
-                        }
-                    } catch (error) {
-                        replyEn = "Backend connection error.";
-                        replyPt = "Erro de conexão com o backend.";
-                    }
+                    await bookSlot('2026-10-15T16:00:00', '15/10 às 16:00');
+                    return;
+                } else {
+                    const randomQ = personalQuestions[Math.floor(Math.random() * personalQuestions.length)];
+                    replyEn = `That's great! Let me ask you: ${randomQ.en}`;
+                    replyPt = `Muito bem! Deixe-me te perguntar: ${randomQ.pt}`;
                 }
                 
                 statusText.innerText = "Sebastian Speaking...";
                 statusTranslation.innerText = "Sebastian Falando...";
                 
+                container.classList.remove('listening');
                 speak(replyEn);
                 
-                // Atualiza a tela com a resposta do Sebastian e a tradução
                 setTimeout(() => {
                     transcriptEn.innerText = `Sebastian: "${replyEn}"`;
                     transcriptPt.innerText = `Sebastian: "${replyPt}"`;
                 }, 500);
 
                 setTimeout(() => {
-                    statusText.innerText = "Click the core to speak with Sebastian";
-                    statusTranslation.innerText = "Clique no núcleo para falar com o Sebastian";
-                    container.classList.remove('listening');
-                }, 4000);
+                    statusText.innerText = "Click the face to practice conversation";
+                    statusTranslation.innerText = "Clique no rosto para praticar conversação";
+                }, 5000);
             };
 
             recognition.onerror = () => {
@@ -235,10 +375,6 @@
                 statusTranslation.innerText = "Ocorreu um erro. Tente novamente.";
                 container.classList.remove('listening');
             };
-
-        } else {
-            statusText.innerText = "Speech recognition not supported in this browser. Use Google Chrome.";
-            statusTranslation.innerText = "Reconhecimento de voz não suportado neste navegador. Use o Google Chrome.";
         }
     </script>
 </body>
